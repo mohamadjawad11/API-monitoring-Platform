@@ -1,0 +1,29 @@
+services:
+  db:
+    # timescaledb-ha bundles the timescaledb_toolkit extension we need
+    # for percentile_agg() later. The plain timescaledb image doesn't
+    # include it, so we use this one from the start.
+    image: timescale/timescaledb-ha:pg16
+    container_name: monitoring_db,
+    restart: unless-stopped
+    ports:
+      # host_port:container_port
+      # left side (5433) is what YOUR machine uses to connect
+      # right side (5432) is Postgres's normal port, inside the container
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: monitoring_user
+      POSTGRES_PASSWORD: monitoring_dev_password
+      POSTGRES_DB: monitoring
+    volumes:
+      # this keeps your data on disk even if you stop/restart the container
+      - db_data:/home/postgres/pgdata/data
+
+volumes:
+  db_data:
+
+# Explanation:
+# The `db` service is a PostgreSQL database, running in a container.
+# It's configured to listen on port 5433 on your machine, and port 5432 inside the container.
+# The `POSTGRES_USER`, `POSTGRES_PASSWORD`, and `POSTGRES_DB` environment variables are used to configure the database.
+# The `db_data` volume is used to persist the database data on disk, so that it's not lost when the container is stopped or restarted.

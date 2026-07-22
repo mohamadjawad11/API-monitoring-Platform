@@ -1,0 +1,20 @@
+
+Phase 1: Database Setup (Postgres + TimescaleDB)
+
+- first I designed the schema (schema.sql) business descisions and dev descisions are commented in the schema
+
+- next step is creating docker file docker-compose.yml which is used to run the database and the application
+  I used also timescale/timescaledb-ha:pg16 not plain timescaledb because it is more stable and it has a lot of features like replication and failover
+
+- now to activate the schema and run the database I used the following commands:
+  docker exec -it monitoring_db psql -U monitoring_user -d monitoring
+  docker exec -i monitoring_db psql -U monitoring_user -d monitoring < schema.sql
+
+  Confirmed all objects were created: 4 tables, hypertable, indexes, compression policy, continuous aggregate + refresh policy.
+
+
+- Then I searched for a gui to display db and tableplus was the best one for me so I connected my db to it
+  and confirmed all objects were created.
+
+
+
